@@ -14,7 +14,19 @@ struct ContentView: View {
         NavigationStack {
             List {
                 ForEach($tasks) { $task in
-                    TextField("Task title", text: $task.title)
+                    HStack {
+                        Button {
+                            task.isCompleted.toggle()
+                        } label: {
+                            Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
+                                .foregroundColor(task.isCompleted ? .green : .secondary)
+                        }
+                        .buttonStyle(.plain)
+
+                        TextField("Task title", text: $task.title)
+                            .strikethrough(task.isCompleted)
+                            .foregroundColor(task.isCompleted ? .secondary : .primary)
+                    }
                 }
             }
             .listStyle(.plain)
