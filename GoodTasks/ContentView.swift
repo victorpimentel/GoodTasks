@@ -23,6 +23,7 @@ struct ContentView: View {
                             .foregroundColor(task.isCompleted ? .secondary : .primary)
                     }
                 }
+                .onDelete(perform: deleteTasks)
 
                 HStack {
                     CheckBox(isChecked: .constant(false))
@@ -44,6 +45,10 @@ struct ContentView: View {
         let newTask = Task(title: newTaskTitle)
         tasks.append(newTask)
         newTaskTitle = ""
+    }
+
+    func deleteTasks(offsets: IndexSet) {
+        tasks.remove(atOffsets: offsets)
     }
 }
 
