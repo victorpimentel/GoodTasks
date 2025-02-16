@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct GoodTasksApp: App {
+    @State private var tasks: [Task] = []
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(tasks: $tasks)
         }
     }
 }

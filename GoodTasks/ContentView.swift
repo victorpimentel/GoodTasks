@@ -8,17 +8,31 @@
 import SwiftUI
 
 struct ContentView: View {
+    @Binding var tasks: [Task]
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationStack {
+            List {
+                ForEach($tasks) { $task in
+                    TextField("Task title", text: $task.title)
+                }
+            }
+            .listStyle(.plain)
+            .navigationTitle("GoodTasks")
         }
-        .padding()
     }
 }
 
 #Preview {
-    ContentView()
+    struct Preview: View {
+        @State var tasks = [
+            Task(title: "First"),
+            Task(title: "Second", isCompleted: true)
+        ]
+        var body: some View {
+            ContentView(tasks: $tasks)
+        }
+    }
+
+    return Preview()
 }
