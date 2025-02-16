@@ -17,11 +17,17 @@ struct ContentView: View {
             List {
                 ForEach($tasks) { $task in
                     HStack {
-                        CheckBox(isChecked: $task.isCompleted)
+                        CheckBox(isChecked: Binding(get: {
+                            task.isCompleted
+                        }, set: { newValue in
+                            task.isCompleted = newValue
+                            saveTasks()
+                        }))
 
                         TextField("Task title", text: $task.title)
                             .strikethrough(task.isCompleted)
                             .foregroundColor(task.isCompleted ? .secondary : .primary)
+                            .onSubmit(saveTasks)
                     }
                 }
                 .onDelete(perform: deleteTasks)
@@ -41,6 +47,7 @@ struct ContentView: View {
             .listStyle(.plain)
             .navigationTitle("GoodTasks")
         }
+        .onAppear(perform: loadTasks)
     }
 
     func addTask() {
@@ -48,10 +55,26 @@ struct ContentView: View {
         let newTask = Task(title: newTaskTitle)
         tasks.append(newTask)
         newTaskTitle = ""
+        saveTasks()
     }
 
     func deleteTasks(offsets: IndexSet) {
         tasks.remove(atOffsets: offsets)
+        saveTasks()
+    }
+
+    func saveTasks() {
+        guard let encoded = try? JSONEncoder().encode(tasks) else { return }
+        UserDefaults.standard.set(encoded, forKey: "tasks")
+    }
+
+    func loadTasks() {
+        guard let data = UserDefaults.standard.data(forKey: "tasks"),
+              let decoded = try? JSONDecoder().decode([Task].self, from: data) else {
+            return
+        }
+
+        tasks = decoded
     }
 }
 
