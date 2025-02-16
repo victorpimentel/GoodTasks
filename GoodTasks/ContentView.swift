@@ -10,6 +10,7 @@ import SwiftUI
 struct ContentView: View {
     @Binding var tasks: [Task]
     @State private var newTaskTitle: String = ""
+    @FocusState private var newTaskTitleIsFocused: Bool
 
     var body: some View {
         NavigationStack {
@@ -32,7 +33,9 @@ struct ContentView: View {
                     TextField("Add new task", text: $newTaskTitle)
                         .onSubmit {
                             addTask()
+                            newTaskTitleIsFocused = true
                         }
+                        .focused($newTaskTitleIsFocused)
                 }
             }
             .listStyle(.plain)
