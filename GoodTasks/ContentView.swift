@@ -15,13 +15,7 @@ struct ContentView: View {
             List {
                 ForEach($tasks) { $task in
                     HStack {
-                        Button {
-                            task.isCompleted.toggle()
-                        } label: {
-                            Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                                .foregroundColor(task.isCompleted ? .green : .secondary)
-                        }
-                        .buttonStyle(.plain)
+                        CheckBox(isChecked: $task.isCompleted)
 
                         TextField("Task title", text: $task.title)
                             .strikethrough(task.isCompleted)
